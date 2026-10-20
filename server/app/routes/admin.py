@@ -335,9 +335,11 @@ async def stage2_retrain(body: MLStage2ConfigUpdate) -> dict:
     return {
         "status": "success",
         "claims_scored": claims_scored,
+        "model_type": result.get("model_type"),
         "metrics": {k: result.get(k) for k in
-                    ("auc_roc", "f2_score", "precision", "recall", "threshold",
-                     "brier_calibrated", "positive_rate")},
+                    ("auc_roc", "pr_auc", "precision_at_top_10pct", "f2_score",
+                     "precision", "recall", "threshold", "brier_calibrated",
+                     "positive_rate")},
     }
 
 

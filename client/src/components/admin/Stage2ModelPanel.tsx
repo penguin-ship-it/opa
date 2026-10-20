@@ -40,7 +40,7 @@ interface Stage2Config {
 }
 
 const DEFAULT_CONFIG: Stage2Config = {
-  n_estimators: 300, max_depth: null, min_samples_split: 2, min_samples_leaf: 1,
+  n_estimators: 300, max_depth: null, min_samples_split: 2, min_samples_leaf: 20,
   max_features: 'sqrt', max_leaf_nodes: null, bootstrap: true, class_weight: null,
   criterion: 'gini', decision_threshold_mode: 'auto_f2', manual_threshold: null,
   calibration_method: 'sigmoid',

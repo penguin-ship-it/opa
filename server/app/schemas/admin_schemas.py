@@ -135,7 +135,8 @@ class MLStage2ConfigUpdate(BaseModel):
     n_estimators: int = Field(default=300, ge=10, le=2000)
     max_depth: Optional[int] = Field(default=None, ge=1, le=100)
     min_samples_split: int = Field(default=2, ge=2, le=200)
-    min_samples_leaf: int = Field(default=1, ge=1, le=200)
+    # None → 20 without SMOTE, 1 with it (resolved in train_model).
+    min_samples_leaf: Optional[int] = Field(default=None, ge=1, le=200)
     max_features: Optional[str] = Field(default="sqrt", pattern=_MAX_FEATURES_RE)
     max_leaf_nodes: Optional[int] = Field(default=None, ge=2, le=10000)
     bootstrap: bool = True
@@ -144,10 +145,14 @@ class MLStage2ConfigUpdate(BaseModel):
     decision_threshold_mode: str = Field(default="auto_f2", pattern="^(auto_f2|manual)$")
     manual_threshold: Optional[float] = Field(default=None, ge=0.0, le=1.0)
     calibration_method: str = Field(default="sigmoid", pattern="^(sigmoid|isotonic|none)$")
+    model_type: str = Field(default="random_forest", pattern="^(random_forest|logistic|hist_gb)$")
+    use_smote: bool = False
 
 
 class MLStage2TrialResult(BaseModel):
     """Metrics from a Stage 2 training run (trial: nothing persisted)."""
+    model_type: str = "random_forest"
+    use_smote: bool = False
     features: List[str] = []
     params: dict = {}
     positive_rate: float
@@ -158,6 +163,8 @@ class MLStage2TrialResult(BaseModel):
     f1_score: Optional[float] = None
     f2_score: Optional[float] = None
     auc_roc: Optional[float] = None
+    pr_auc: Optional[float] = None
+    precision_at_top_10pct: Optional[float] = None
     threshold: Optional[float] = None
     calibration_method: str = "none"
     brier_raw: Optional[float] = None
