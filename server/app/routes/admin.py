@@ -306,7 +306,7 @@ async def stage2_trial(body: MLStage2ConfigUpdate) -> MLStage2TrialResult:
     """Experimental Stage 2 training run. Returns metrics + feature importances
     but persists NOTHING — the live claim_predictor artifact and the per-claim
     scores are untouched."""
-    from ..ml.seed_stage2_training_data import generate_training_data
+    from ..ml.simulate_stage2_claims import generate_training_data
     from ..ml.train_claim_predictor import train_model
     if body.decision_threshold_mode == "manual" and body.manual_threshold is None:
         raise HTTPException(status_code=400, detail="manual_threshold is required when decision_threshold_mode='manual'")
@@ -322,7 +322,7 @@ async def stage2_retrain(body: MLStage2ConfigUpdate) -> dict:
     """Retrain Stage 2 for real: persist the artifact + metadata, then re-score
     every claim's overpayment_probability so the audit plan reflects the new
     model. Returns metrics + the number of claims re-scored."""
-    from ..ml.seed_stage2_training_data import generate_training_data
+    from ..ml.simulate_stage2_claims import generate_training_data
     from ..ml.train_claim_predictor import train_model
     from ..ml.score_claims import run as score_claims
     if body.decision_threshold_mode == "manual" and body.manual_threshold is None:

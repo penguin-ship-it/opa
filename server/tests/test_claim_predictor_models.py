@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 from app.ml import train_claim_predictor as tcp
-from app.ml.seed_stage2_training_data import generate_training_data
+from app.ml.simulate_stage2_claims import generate_training_data
 from app.ml.stage2_features import STAGE2_FEATURE_COLS
 
 

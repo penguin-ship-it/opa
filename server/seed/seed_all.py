@@ -176,7 +176,7 @@ def main() -> None:
     print("[Step 8b] Stage 2 training  (claim predictor: P_risk + F4/F5/F7/F8)")
     print("─" * 50)
     try:
-        from app.ml.seed_stage2_training_data import generate_training_data as _gen_s2
+        from app.ml.simulate_stage2_claims import generate_training_data as _gen_s2
         from app.ml.train_claim_predictor import train_model as _train_s2
         _train_s2(_gen_s2())
     except Exception as exc:  # noqa: BLE001

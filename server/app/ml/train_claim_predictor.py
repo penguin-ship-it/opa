@@ -359,5 +359,5 @@ def score_claim(features: dict[str, float]) -> float:
 
 
 if __name__ == "__main__":
-    from app.ml.seed_stage2_training_data import generate_training_data
+    from app.ml.simulate_stage2_claims import generate_training_data
     train_model(generate_training_data())
