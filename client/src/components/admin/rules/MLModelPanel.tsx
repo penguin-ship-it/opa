@@ -8,6 +8,7 @@ import ModelTuningPanel from '../ModelTuningPanel'
 import Stage2ModelPanel from '../Stage2ModelPanel'
 import CapacityPlanPanel from '../CapacityPlanPanel'
 import TrainModelPage from '../../../pages/TrainModelPage'
+import { describeLoadError } from '../../../utils/loadError'
 
 interface MLModelInfo {
   version: string; trained_at: string; accuracy: number
@@ -29,7 +30,7 @@ export default function MLModelPanel() {
   const qc = useQueryClient()
   const [confirmRetrain, setConfirmRetrain] = useState(false)
 
-  const { data: modelInfo, isLoading } = useQuery<MLModelInfo>({
+  const { data: modelInfo, isLoading, error } = useQuery<MLModelInfo>({
     queryKey: ['admin', 'model'],
     queryFn: async () => (await api.get<MLModelInfo>('/admin/model')).data,
   })
@@ -133,7 +134,7 @@ export default function MLModelPanel() {
           })()}
         </div>
       ) : (
-        <p className="text-sm text-gray-400">Model info not available.</p>
+        <p className="text-sm text-gray-400">{describeLoadError(error, 'Stage 1 model info')}</p>
       )}
 
       {confirmRetrain && (

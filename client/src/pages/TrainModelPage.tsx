@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Brain, RefreshCw, Upload, CheckCircle, AlertTriangle, Clock, HardDrive, Table2 } from 'lucide-react'
 import api from '../services/api'
+import { describeLoadError } from '../utils/loadError'
 
 interface ModelInfo {
   model_name: string
@@ -91,7 +92,7 @@ export default function TrainModelPage() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [result, setResult] = useState<TrainResult | null>(null)
 
-  const { data: info, refetch: refetchInfo } = useQuery<ModelInfo>({
+  const { data: info, refetch: refetchInfo, error: infoError } = useQuery<ModelInfo>({
     queryKey: ['ml-info'],
     queryFn: fetchInfo,
   })
@@ -177,6 +178,8 @@ export default function TrainModelPage() {
               <p className="text-sm font-bold text-gray-800">{info.feature_cols.length}</p>
             </div>
           </div>
+        ) : infoError ? (
+          <p className="text-sm text-gray-400 mb-5">{describeLoadError(infoError, 'Model artifact info')}</p>
         ) : (
           <div className="h-20 bg-gray-50 rounded-xl animate-pulse mb-5" />
         )}

@@ -28,6 +28,7 @@ import {
 import api from '../../services/api'
 import { APP_URLS } from '../../config/appUrls'
 import { getStatusCounts } from '../../services/caseService'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 import type { CaseStatus, CaseSummary, ReferenceDataFreshness, UserRole } from '../../types'
 
 // Typography + palette mirror ClaimGuard's left nav so the platform reads
@@ -300,10 +301,13 @@ function DemoTools() {
 }
 
 export default function SideNav() {
-  // Read the primary role of the currently-selected user (set by the TopBar
-  // user picker into opa_role). Used only to filter which nav links show —
-  // this is a UX nicety, not security. Server enforces real access.
-  const role = (localStorage.getItem('opa_role') ?? 'analyst') as UserRole
+  // Role of the authenticated user, used only to filter which nav links show —
+  // a UX nicety, not security; the server enforces real access. Read from the
+  // CurrentUser context, not localStorage `opa_role`: that key is written only
+  // after the async auth lookup, so a previous user's role could leak into the
+  // first render. Until the user loads, treat them as an analyst (fail closed).
+  const { currentUser } = useCurrentUser()
+  const role = (currentUser?.role ?? 'analyst') as UserRole
   const { pathname, search } = useLocation()
   const currentStage = new URLSearchParams(search).get('stage') ?? ''
 
